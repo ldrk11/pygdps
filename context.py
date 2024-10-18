@@ -1,15 +1,15 @@
 from argon2 import PasswordHasher
 from flask import Flask, request
 from typing import Union
-import pymongo
+import sqlite3 as sqlite
 import xor
 import time
 
 class Context():
     """Contain values and functions that are used in routes"""
     app: Flask = None
-    db_client = pymongo.MongoClient()
-    db = db_client.gdps
+    db_client = sqlite.connect("gdps.db", check_same_thread=False) # hey future me you SHOULD NOT use check_same_thread without adding any thought but im doing it anyway heheh
+    db = db_client.cursor()
 
     @staticmethod
     def get_arg(name: str, default: bool=None) -> str:
