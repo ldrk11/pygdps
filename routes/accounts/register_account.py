@@ -1,10 +1,13 @@
 import time
 from typing import TYPE_CHECKING
 if TYPE_CHECKING: from context import Context
+from create_accounts_table import create_accounts_table
+import sqlite3 as sqlite
 
 def setup(ctx: 'Context'):
     app = ctx.app
     db = ctx.db
+    db_client = ctx.db_client
     get_arg = ctx.get_arg
     get_counter = ctx.get_counter
     pw_hasher = ctx.pw_hasher
@@ -19,17 +22,17 @@ def setup(ctx: 'Context'):
         secret = get_arg('secret')
         
         # account with same name already exists
-        if db.accounts.count({'name': user_name}):
+        # try:
+        if len(db.execute("SELECT userName=? from accounts", [user_name]).fetchall()) != 0:
             return '-2'
-        
-        db.accounts.insert_one({
-            'id': get_counter('accounts'),
-            'name': user_name,
-            'password': pw_hasher.hash(password),
-            'email': email,
-            'timestamp': time.time(),
-            'secret': secret,
-            'save_data': b'',
-            'save_key': b''
-        })
+        # except sqlite.OperationalError:
+        #     create_accounts_table(db)
+        #     if len(db.execute("SELECT userName=? from accounts", [user_name]).fetchall()) != 0:
+        #         return '-2'
+
+        db.execute(
+            "INSERT INTO accounts (userName, password, email, registerDate) VALUES (?,?,?,?)",
+            [user_name, pw_hasher.hash(password), email, time.time()]
+        )
+        db_client.commit()
         return '1'
