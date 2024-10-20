@@ -22,13 +22,13 @@ def setup(ctx: 'Context'):
         secret = get_arg('secret')
         
         # account with same name already exists
-        # try:
-        if len(db.execute("SELECT userName=? from accounts", [user_name]).fetchall()) != 0:
-            return '-2'
-        # except sqlite.OperationalError:
-        #     create_accounts_table(db)
-        #     if len(db.execute("SELECT userName=? from accounts", [user_name]).fetchall()) != 0:
-        #         return '-2'
+        try:
+            if len(db.execute("SELECT userName=? from accounts", [user_name]).fetchall()) != 0:
+                return '-2'
+        except sqlite.OperationalError:
+            create_accounts_table(db)
+            if len(db.execute("SELECT userName=? from accounts", [user_name]).fetchall()) != 0:
+                return '-2'
 
         db.execute(
             "INSERT INTO accounts (userName, password, email, registerDate) VALUES (?,?,?,?)",
