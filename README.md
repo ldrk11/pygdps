@@ -6,11 +6,11 @@ Run `run.py`.
 
 ## Implemented
 - `/getGJUserInfo.php` - works fine but creator points, rank and etc are hardcoded
+- `/accounts/registerGJAccount.php` - nothing much to say, it works (passwords are argon2 hashed)
 
 ## Was Implemented but needs to be changed to SQLite
 - `/uploadGJLevel.php` - uploading a level works, and thats it (no replacing already uploaded level, etc)
 - `/getGJLevels.php` - searching by difficulty is missing
 - `/downloadGJLevel.php` - daily levels dont work yet
-- `/accounts/registerGJAccount.php` - nothing much to say, it works (passwords are argon2 hashed)
 - `/accounts/loginGJAccount.php` - same as above
 - `/updateGJUserScore.php` - works fine
